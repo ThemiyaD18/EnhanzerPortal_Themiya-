@@ -28,16 +28,18 @@ export class PurchaseBill implements OnInit {
     private http: HttpClient,
     private router: Router
   ) {
-    // Initializing with null fixes the "0" issue on the UI
     this.itemForm = this.fb.group({
-      item: ['', Validators.required],
+      // Only letters and spaces allowed
+      item: ['', [Validators.required, Validators.pattern(/^[a-zA-Z\s]+$/)]],
       batch: ['', Validators.required],
-      standardCost: [null, Validators.min(0)],
-      standardPrice: [null, Validators.min(0)],
-      margin: [null],
-      qty: [1, [Validators.required, Validators.min(1)]],
-      freeQty: [null],
-      discount: [null],
+      // Only numbers with optional decimals allowed
+      standardCost: [null, [Validators.required, Validators.min(0), Validators.pattern(/^\d+(\.\d+)?$/)]],
+      standardPrice: [null, [Validators.required, Validators.min(0), Validators.pattern(/^\d+(\.\d+)?$/)]],
+      margin: [null, [Validators.pattern(/^\d+(\.\d+)?$/)]],
+      // Only strict whole numbers allowed
+      qty: [1, [Validators.required, Validators.min(1), Validators.pattern(/^\d+$/)]],
+      freeQty: [null, [Validators.pattern(/^\d+$/)]],
+      discount: [null, [Validators.pattern(/^\d+(\.\d+)?$/)]],
       totalCost: [{ value: null, disabled: true }],
       totalSelling: [{ value: null, disabled: true }]
     });
@@ -59,7 +61,6 @@ export class PurchaseBill implements OnInit {
       }
     });
 
-    // Dynamic Calculations handle nulls gracefully by defaulting to 0
     this.itemForm.valueChanges.subscribe(val => {
       const sc = val.standardCost || 0;
       const sp = val.standardPrice || 0;
@@ -92,14 +93,13 @@ export class PurchaseBill implements OnInit {
 
   addItem(): void {
     if (this.itemForm.invalid) {
-      alert('Please fill out the Item, Batch, and Qty fields.');
+      alert('Please fill out the form correctly. Ensure no invalid characters are used.');
       return;
     }
 
     this.addedItems.push(this.itemForm.getRawValue());
     this.calculateSummary();
 
-    // Reset back to null for the next entry
     this.itemForm.reset({ qty: 1, standardCost: null, standardPrice: null, margin: null, freeQty: null, discount: null });
   }
 

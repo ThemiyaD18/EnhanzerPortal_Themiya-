@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectorRef } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AuthService } from '../../services/auth';
@@ -18,7 +18,8 @@ export class LoginComponent {
   constructor(
     private fb: FormBuilder,
     private authService: AuthService,
-    private router: Router
+    private router: Router,
+    private cdr: ChangeDetectorRef
   ) {
     this.loginForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
@@ -31,7 +32,12 @@ export class LoginComponent {
   }
 
   onSubmit(): void {
+    if (this.isLoading) {
+      return;
+    }
+
     if (this.loginForm.invalid) {
+      this.loginForm.markAllAsTouched();
       return;
     }
 
@@ -42,17 +48,30 @@ export class LoginComponent {
     this.authService.login(email, password).subscribe({
       next: (res) => {
         this.isLoading = false;
-
-        // Securely store the authenticated session as required
         localStorage.setItem('isLoggedIn', 'true');
-
-        alert('Login Successful! ' + res.message);
+        localStorage.setItem('authToken', res?.token ?? '');
+        if (res?.locations) {
+          localStorage.setItem('userLocations', JSON.stringify(res.locations));
+        }
         this.router.navigate(['/purchase-bill']);
       },
       error: (err) => {
         this.isLoading = false;
-        this.errorMessage = 'Invalid credentials or connection error. Please try again.';
-        console.error(err);
+
+        if (err?.status === 401) {
+          this.errorMessage = 'Invalid email or password. Please try again.';
+        } else if (err?.error?.message) {
+          this.errorMessage = err.error.message;
+        } else if (err?.status === 0) {
+          this.errorMessage = 'Cannot reach the server. Please check your connection.';
+        } else {
+          this.errorMessage = 'Invalid credentials or connection error. Please try again.';
+        }
+
+        console.error('Login error:', err);
+
+        // This forces the UI to immediately display the error message
+        this.cdr.detectChanges();
       }
     });
   }
