@@ -13,21 +13,19 @@ export class LoginComponent {
   loginForm: FormGroup;
   isLoading = false;
   errorMessage = '';
-  showPassword = false; // <-- Added to control password visibility
+  showPassword = false;
 
   constructor(
     private fb: FormBuilder,
     private authService: AuthService,
     private router: Router
   ) {
-    // Setting up Form Validation
     this.loginForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
       password: ['', Validators.required]
     });
   }
 
-  // <-- Function to toggle the password view
   togglePasswordVisibility(): void {
     this.showPassword = !this.showPassword;
   }
@@ -45,7 +43,7 @@ export class LoginComponent {
       next: (res) => {
         this.isLoading = false;
 
-        // --- SESSION HANDLING: Securely store the authenticated session ---
+        // Securely store the authenticated session as required
         localStorage.setItem('isLoggedIn', 'true');
 
         alert('Login Successful! ' + res.message);

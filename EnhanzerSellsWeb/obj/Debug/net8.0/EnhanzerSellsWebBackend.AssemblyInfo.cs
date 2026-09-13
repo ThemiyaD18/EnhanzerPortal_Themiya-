@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("EnhanzerSellsWebBackend")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+03c4975f0d97c4e3dfeeba649aaa52aff4a87d80")]
 [assembly: System.Reflection.AssemblyProductAttribute("EnhanzerSellsWebBackend")]
 [assembly: System.Reflection.AssemblyTitleAttribute("EnhanzerSellsWebBackend")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

@@ -1,10 +1,16 @@
 <div class="app-layout">
   <!-- Left Panel: Form & Table -->
   <div class="main-panel">
-    <div class="tabs">
-      <span class="tab active">Items</span>
-      <span class="tab">Accounts</span>
-      <span class="tab">Taxes</span>
+
+    <div class="tabs" style="display: flex; justify-content: space-between; align-items: center;">
+      <div>
+        <span class="tab active">Items</span>
+        <span class="tab">Accounts</span>
+        <span class="tab">Taxes</span>
+      </div>
+      <button type="button" (click)="logout()" style="background: none; border: 1px solid #dc3545; color: #dc3545; padding: 4px 12px; border-radius: 4px; cursor: pointer; font-size: 13px;">
+        Logout
+      </button>
     </div>
 
     <form [formGroup]="itemForm" class="input-form">
@@ -72,12 +78,36 @@
     </table>
   </div>
 
-  <!-- Right Panel: Summary -->
+  <!-- Right Panel: Refined Summary -->
   <div class="summary-panel">
     <div class="summary-card">
-      <h4>Summary</h4>
-      <div class="summary-line"><span>Total Items</span><span>{{ totalItems }}</span></div>
-      <div class="summary-line"><span>Total Qty</span><span>{{ totalQty }}</span></div>
+      <h4 class="summary-header">📊 Summary</h4>
+
+      <div class="summary-section">
+        <h5 class="section-title">📦 Item Summary <span class="info-icon">ⓘ</span></h5>
+        <div class="summary-line"><span>Total Items</span><span>{{ totalItems }}</span></div>
+        <div class="summary-line"><span>Total Qty</span><span>{{ totalQty }}</span></div>
+      </div>
+
+      <div class="summary-section">
+        <h5 class="section-title">💲 Financial Summary</h5>
+        <div class="summary-line"><span>Gross Total</span><span>{{ grossTotal | number:'1.2-2' }}</span></div>
+        <div class="summary-line"><span>Item Discount</span><span>0.00</span></div>
+        <div class="summary-line"><span>Overall Discount ⊕</span><span>0.00</span></div>
+        <div class="summary-line"><span>Total Discounts</span><span>0.00</span></div>
+        <div class="summary-line"><span>Total Before Tax</span><span>{{ grossTotal | number:'1.2-2' }}</span></div>
+      </div>
+
+      <div class="summary-section">
+        <h5 class="section-title">🏷️ Tax Summary <span class="info-icon">ⓘ</span></h5>
+        <div class="summary-line"><span>Total Tax</span><span>0.00</span></div>
+        <div class="summary-line"><span>Suspended Tax</span><span>0.00</span></div>
+      </div>
+
+      <div class="summary-section net-total-section">
+        <h5 class="section-title" style="margin-bottom: 5px;">💵 Net Total</h5>
+        <h3 class="net-total-text">Rs. {{ grossTotal | number:'1.2-2' }}</h3>
+      </div>
     </div>
   </div>
 </div>
