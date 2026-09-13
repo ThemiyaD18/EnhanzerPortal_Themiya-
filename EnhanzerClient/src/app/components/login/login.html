@@ -1,0 +1,29 @@
+<div class="login-wrapper">
+  <div class="login-box">
+    <h2 class="title">Hi</h2>
+    <div *ngIf="errorMessage" class="error-alert">{{ errorMessage }}</div>
+
+    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+      <div class="input-line">
+        <span class="icon">✉️</span>
+        <input type="email" formControlName="email" placeholder="Email*" />
+      </div>
+
+      <div class="input-line">
+        <span class="icon">🗝️</span>
+        <!-- Dynamic type binding for showing/hiding password -->
+        <input [type]="showPassword ? 'text' : 'password'" formControlName="password" placeholder="Password*" />
+
+        <!-- Clickable eye icon -->
+        <span class="icon toggle-password" (click)="togglePasswordVisibility()">
+          {{ showPassword ? '👁️‍🗨️' : '👁️' }}
+        </span>
+      </div>
+
+      <button type="submit" class="btn-gradient" [disabled]="loginForm.invalid || isLoading">
+        <span *ngIf="!isLoading">LOGIN</span>
+        <span *ngIf="isLoading">Loading...</span>
+      </button>
+    </form>
+  </div>
+</div>

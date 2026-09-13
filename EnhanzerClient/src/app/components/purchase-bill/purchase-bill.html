@@ -1,0 +1,83 @@
+<div class="app-layout">
+  <!-- Left Panel: Form & Table -->
+  <div class="main-panel">
+    <div class="tabs">
+      <span class="tab active">Items</span>
+      <span class="tab">Accounts</span>
+      <span class="tab">Taxes</span>
+    </div>
+
+    <form [formGroup]="itemForm" class="input-form">
+      <div class="form-row">
+        <div class="form-group autocomplete">
+          <label>Item*</label>
+          <input type="text" formControlName="item">
+          <ul class="suggestions" *ngIf="filteredItems.length > 0">
+            <li *ngFor="let i of filteredItems" (click)="selectItem(i)">{{ i }}</li>
+          </ul>
+        </div>
+        <div class="form-group">
+          <label>Batch</label>
+          <select formControlName="batch">
+            <option value="">Select</option>
+            <option *ngFor="let b of batches" [value]="b">{{ b }}</option>
+          </select>
+        </div>
+        <div class="form-group"><label>Standard Cost</label><input type="number" formControlName="standardCost"></div>
+        <div class="form-group"><label>Standard Price</label><input type="number" formControlName="standardPrice"></div>
+        <div class="form-group"><label>Margin</label><input type="number" formControlName="margin"></div>
+        <div class="form-group"><label>Qty</label><input type="number" formControlName="qty"></div>
+        <div class="form-group"><label>Free Qty</label><input type="number" formControlName="freeQty"></div>
+      </div>
+
+      <div class="form-row bottom-row">
+        <div class="form-group"><label>Discount (%)</label><input type="number" formControlName="discount"></div>
+        <div class="form-group disabled-box"><label>Total Cost</label><input type="number" formControlName="totalCost" readonly></div>
+        <div class="form-group disabled-box"><label>Total Selling</label><input type="number" formControlName="totalSelling" readonly></div>
+        <div class="form-group button-group"><button type="button" class="btn-add" (click)="addItem()">Add +</button></div>
+      </div>
+    </form>
+
+    <table class="styled-table">
+      <thead>
+        <tr>
+          <th>Item</th>
+          <th>Batch</th>
+          <th>Std Cost</th>
+          <th>Std Price</th>
+          <th>Margin</th>
+          <th>Qty</th>
+          <th>Free Qty</th>
+          <th>Disc</th>
+          <th>Total Cost</th>
+          <th>Total Selling</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let row of addedItems; let i = index">
+          <td>{{ row.item }}</td>
+          <td>{{ row.batch }}</td>
+          <td>{{ row.standardCost }}</td>
+          <td>{{ row.standardPrice }}</td>
+          <td>{{ row.margin }}</td>
+          <td>{{ row.qty }}</td>
+          <td>{{ row.freeQty }}</td>
+          <td>{{ row.discount }}</td>
+          <td>{{ row.totalCost | number:'1.2-2' }}</td>
+          <td>{{ row.totalSelling | number:'1.2-2' }}</td>
+          <td><button class="btn-delete" (click)="removeItem(i)">X</button></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Right Panel: Summary -->
+  <div class="summary-panel">
+    <div class="summary-card">
+      <h4>Summary</h4>
+      <div class="summary-line"><span>Total Items</span><span>{{ totalItems }}</span></div>
+      <div class="summary-line"><span>Total Qty</span><span>{{ totalQty }}</span></div>
+    </div>
+  </div>
+</div>

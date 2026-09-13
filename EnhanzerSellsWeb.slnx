@@ -1,0 +1,7 @@
+<Solution>
+  <Project Path="EnhanzerClient/EnhanzerClient.esproj">
+    <Build />
+    <Deploy />
+  </Project>
+  <Project Path="EnhanzerSellsWeb/EnhanzerSellsWebBackend.csproj" />
+</Solution>
