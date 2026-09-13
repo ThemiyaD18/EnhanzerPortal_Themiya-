@@ -1,112 +1,136 @@
-<div class="app-layout">
-  <!-- Left Panel: Form & Table -->
-  <div class="main-panel">
+<div class="screen-wrapper">
 
-    <div class="tabs" style="display: flex; justify-content: space-between; align-items: center;">
-      <div>
+  <!-- Missing Blue App Header -->
+  <header class="app-header">
+    <div class="header-title">
+      <span class="info-icon-large">ⓘ</span>
+      <div class="title-text">
+        <h2>Purchase Bill</h2>
+        <p>Enter Information for the Purchase Bill</p>
+      </div>
+    </div>
+    <div class="header-actions">
+      <span class="action-icon">↻</span>
+      <span class="action-icon">⊕</span>
+      <span class="action-icon">✓</span>
+      <span class="action-icon">⊗</span>
+      <button class="btn-logout" (click)="logout()">Logout</button>
+    </div>
+  </header>
+
+  <!-- Missing Primary Tabs -->
+  <div class="primary-tabs">
+    <span class="ptab">Header</span>
+    <span class="ptab active">Details</span>
+    <span class="ptab">Notes</span>
+    <span class="ptab">Documents</span>
+  </div>
+
+  <div class="app-layout">
+    <div class="main-panel">
+
+      <div class="tabs">
         <span class="tab active">Items</span>
         <span class="tab">Accounts</span>
         <span class="tab">Taxes</span>
       </div>
-      <button type="button" (click)="logout()" style="background: none; border: 1px solid #dc3545; color: #dc3545; padding: 4px 12px; border-radius: 4px; cursor: pointer; font-size: 13px;">
-        Logout
-      </button>
+
+      <form [formGroup]="itemForm" class="input-form">
+        <div class="form-row">
+          <div class="form-group autocomplete">
+            <label>Item*</label>
+            <input type="text" formControlName="item">
+            <ul class="suggestions" *ngIf="filteredItems.length > 0">
+              <li *ngFor="let i of filteredItems" (click)="selectItem(i)">{{ i }}</li>
+            </ul>
+          </div>
+          <div class="form-group">
+            <label>Batch</label>
+            <select formControlName="batch">
+              <option value="">Select</option>
+              <option *ngFor="let b of batches" [value]="b">{{ b }}</option>
+            </select>
+          </div>
+          <!-- Placeholders added, initialization handles empty state -->
+          <div class="form-group"><label>Standard Cost</label><input type="number" formControlName="standardCost" placeholder="0.00"></div>
+          <div class="form-group"><label>Standard Price</label><input type="number" formControlName="standardPrice" placeholder="0.00"></div>
+          <div class="form-group"><label>Margin</label><input type="number" formControlName="margin" placeholder="0.00"></div>
+          <div class="form-group"><label>Qty</label><input type="number" formControlName="qty"></div>
+          <div class="form-group"><label>Free Qty</label><input type="number" formControlName="freeQty" placeholder="0"></div>
+        </div>
+
+        <div class="form-row bottom-row">
+          <div class="form-group"><label>Discount (%)</label><input type="number" formControlName="discount" placeholder="0.00"></div>
+          <div class="form-group disabled-box"><label>Total Cost</label><input type="number" formControlName="totalCost" placeholder="0.00" readonly></div>
+          <div class="form-group disabled-box"><label>Total Selling</label><input type="number" formControlName="totalSelling" placeholder="0.00" readonly></div>
+          <div class="form-group button-group"><button type="button" class="btn-add" (click)="addItem()">Add +</button></div>
+        </div>
+      </form>
+
+      <table class="styled-table">
+        <thead>
+          <tr>
+            <th>Item</th>
+            <th>Batch</th>
+            <th>Std Cost</th>
+            <th>Std Price</th>
+            <th>Margin</th>
+            <th>Qty</th>
+            <th>Free Qty</th>
+            <th>Disc</th>
+            <th>Total Cost</th>
+            <th>Total Selling</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let row of addedItems; let i = index">
+            <td>{{ row.item }}</td>
+            <td>{{ row.batch }}</td>
+            <td>{{ row.standardCost || '0' }}</td>
+            <td>{{ row.standardPrice || '0' }}</td>
+            <td>{{ row.margin || '0' }}</td>
+            <td>{{ row.qty }}</td>
+            <td>{{ row.freeQty || '0' }}</td>
+            <td>{{ row.discount || '0' }}</td>
+            <td>{{ row.totalCost | number:'1.2-2' }}</td>
+            <td>{{ row.totalSelling | number:'1.2-2' }}</td>
+            <td><button class="btn-delete" (click)="removeItem(i)">X</button></td>
+          </tr>
+        </tbody>
+      </table>
     </div>
 
-    <form [formGroup]="itemForm" class="input-form">
-      <div class="form-row">
-        <div class="form-group autocomplete">
-          <label>Item*</label>
-          <input type="text" formControlName="item">
-          <ul class="suggestions" *ngIf="filteredItems.length > 0">
-            <li *ngFor="let i of filteredItems" (click)="selectItem(i)">{{ i }}</li>
-          </ul>
+    <!-- Right Panel: Summary -->
+    <div class="summary-panel">
+      <div class="summary-card">
+        <h4 class="summary-header">📊 Summary</h4>
+
+        <div class="summary-section">
+          <h5 class="section-title">📦 Item Summary <span class="info-icon">ⓘ</span></h5>
+          <div class="summary-line"><span>Total Items</span><span>{{ totalItems }}</span></div>
+          <div class="summary-line"><span>Total Qty</span><span>{{ totalQty }}</span></div>
         </div>
-        <div class="form-group">
-          <label>Batch</label>
-          <select formControlName="batch">
-            <option value="">Select</option>
-            <option *ngFor="let b of batches" [value]="b">{{ b }}</option>
-          </select>
+
+        <div class="summary-section">
+          <h5 class="section-title">💲 Financial Summary</h5>
+          <div class="summary-line"><span>Gross Total</span><span>{{ grossTotal | number:'1.2-2' }}</span></div>
+          <div class="summary-line"><span>Item Discount</span><span>0.00</span></div>
+          <div class="summary-line"><span>Overall Discount ⊕</span><span>0.00</span></div>
+          <div class="summary-line"><span>Total Discounts</span><span>0.00</span></div>
+          <div class="summary-line"><span>Total Before Tax</span><span>{{ grossTotal | number:'1.2-2' }}</span></div>
         </div>
-        <div class="form-group"><label>Standard Cost</label><input type="number" formControlName="standardCost"></div>
-        <div class="form-group"><label>Standard Price</label><input type="number" formControlName="standardPrice"></div>
-        <div class="form-group"><label>Margin</label><input type="number" formControlName="margin"></div>
-        <div class="form-group"><label>Qty</label><input type="number" formControlName="qty"></div>
-        <div class="form-group"><label>Free Qty</label><input type="number" formControlName="freeQty"></div>
-      </div>
 
-      <div class="form-row bottom-row">
-        <div class="form-group"><label>Discount (%)</label><input type="number" formControlName="discount"></div>
-        <div class="form-group disabled-box"><label>Total Cost</label><input type="number" formControlName="totalCost" readonly></div>
-        <div class="form-group disabled-box"><label>Total Selling</label><input type="number" formControlName="totalSelling" readonly></div>
-        <div class="form-group button-group"><button type="button" class="btn-add" (click)="addItem()">Add +</button></div>
-      </div>
-    </form>
+        <div class="summary-section">
+          <h5 class="section-title">🏷️ Tax Summary <span class="info-icon">ⓘ</span></h5>
+          <div class="summary-line"><span>Total Tax</span><span>0.00</span></div>
+          <div class="summary-line"><span>Suspended Tax</span><span>0.00</span></div>
+        </div>
 
-    <table class="styled-table">
-      <thead>
-        <tr>
-          <th>Item</th>
-          <th>Batch</th>
-          <th>Std Cost</th>
-          <th>Std Price</th>
-          <th>Margin</th>
-          <th>Qty</th>
-          <th>Free Qty</th>
-          <th>Disc</th>
-          <th>Total Cost</th>
-          <th>Total Selling</th>
-          <th></th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let row of addedItems; let i = index">
-          <td>{{ row.item }}</td>
-          <td>{{ row.batch }}</td>
-          <td>{{ row.standardCost }}</td>
-          <td>{{ row.standardPrice }}</td>
-          <td>{{ row.margin }}</td>
-          <td>{{ row.qty }}</td>
-          <td>{{ row.freeQty }}</td>
-          <td>{{ row.discount }}</td>
-          <td>{{ row.totalCost | number:'1.2-2' }}</td>
-          <td>{{ row.totalSelling | number:'1.2-2' }}</td>
-          <td><button class="btn-delete" (click)="removeItem(i)">X</button></td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
-
-  <!-- Right Panel: Refined Summary -->
-  <div class="summary-panel">
-    <div class="summary-card">
-      <h4 class="summary-header">📊 Summary</h4>
-
-      <div class="summary-section">
-        <h5 class="section-title">📦 Item Summary <span class="info-icon">ⓘ</span></h5>
-        <div class="summary-line"><span>Total Items</span><span>{{ totalItems }}</span></div>
-        <div class="summary-line"><span>Total Qty</span><span>{{ totalQty }}</span></div>
-      </div>
-
-      <div class="summary-section">
-        <h5 class="section-title">💲 Financial Summary</h5>
-        <div class="summary-line"><span>Gross Total</span><span>{{ grossTotal | number:'1.2-2' }}</span></div>
-        <div class="summary-line"><span>Item Discount</span><span>0.00</span></div>
-        <div class="summary-line"><span>Overall Discount ⊕</span><span>0.00</span></div>
-        <div class="summary-line"><span>Total Discounts</span><span>0.00</span></div>
-        <div class="summary-line"><span>Total Before Tax</span><span>{{ grossTotal | number:'1.2-2' }}</span></div>
-      </div>
-
-      <div class="summary-section">
-        <h5 class="section-title">🏷️ Tax Summary <span class="info-icon">ⓘ</span></h5>
-        <div class="summary-line"><span>Total Tax</span><span>0.00</span></div>
-        <div class="summary-line"><span>Suspended Tax</span><span>0.00</span></div>
-      </div>
-
-      <div class="summary-section net-total-section">
-        <h5 class="section-title" style="margin-bottom: 5px;">💵 Net Total</h5>
-        <h3 class="net-total-text">Rs. {{ grossTotal | number:'1.2-2' }}</h3>
+        <div class="summary-section net-total-section">
+          <h5 class="section-title" style="margin-bottom: 5px;">💵 Net Total</h5>
+          <h3 class="net-total-text">Rs. {{ grossTotal | number:'1.2-2' }}</h3>
+        </div>
       </div>
     </div>
   </div>

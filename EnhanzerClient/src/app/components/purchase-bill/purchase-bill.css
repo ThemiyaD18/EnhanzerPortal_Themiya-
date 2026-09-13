@@ -1,28 +1,119 @@
+* {
+  box-sizing: border-box; /* This prevents the right side from going off screen */
+}
+
+.screen-wrapper {
+  font-family: 'Segoe UI', Arial, sans-serif;
+  background-color: #f4f6f9;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* Blue Header Styles */
+.app-header {
+  background-color: #1b3692;
+  color: white;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 25px;
+}
+
+.header-title {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.info-icon-large {
+  font-size: 24px;
+  border: 2px solid white;
+  border-radius: 50%;
+  width: 35px;
+  height: 35px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.title-text h2 {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.title-text p {
+  margin: 2px 0 0 0;
+  font-size: 12px;
+  opacity: 0.8;
+}
+
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.action-icon {
+  font-size: 20px;
+  cursor: pointer;
+}
+
+.btn-logout {
+  background: rgba(255,255,255,0.2);
+  border: 1px solid white;
+  color: white;
+  padding: 6px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+/* Primary Tabs */
+.primary-tabs {
+  background: white;
+  padding: 15px 25px 0 25px;
+  border-bottom: 1px solid #e2e5e8;
+  display: flex;
+  gap: 30px;
+}
+
+.ptab {
+  padding-bottom: 12px;
+  color: #666;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+  .ptab.active {
+    color: #0056b3;
+    font-weight: 600;
+    border-bottom: 3px solid #0056b3;
+  }
+
+/* Layout */
 .app-layout {
   display: flex;
   gap: 20px;
-  padding: 20px;
-  max-width: 1400px;
-  margin: 0 auto;
-  font-family: 'Segoe UI', Arial, sans-serif;
+  padding: 20px 25px;
+  width: 100%;
 }
 
-/* Forces the main form to take up the remaining space */
 .main-panel {
   flex: 1;
+  min-width: 0; /* Prevents flex children from stretching parent */
+  background: white;
   border: 1px solid #e2e5e8;
   border-radius: 6px;
   padding: 20px;
-  background: white;
 }
 
-/* Locks the summary panel to a professional width */
 .summary-panel {
   width: 320px;
-  min-width: 320px;
   flex-shrink: 0;
 }
 
+/* Sub Tabs */
 .tabs {
   border-bottom: 2px solid #e2e5e8;
   margin-bottom: 25px;
@@ -43,9 +134,11 @@
     padding-bottom: 11px;
   }
 
+/* Form Styles */
 .form-row {
   display: flex;
-  gap: 15px;
+  flex-wrap: wrap; /* Allows fields to wrap gracefully if space is tight */
+  gap: 12px;
   margin-bottom: 20px;
   align-items: flex-end;
 }
@@ -53,8 +146,14 @@
 .form-group {
   display: flex;
   flex-direction: column;
-  flex: 1;
+  flex: 1 1 110px; /* Gives fields a flexible base size so they never squish awkwardly */
+  min-width: 0;
 }
+
+  /* Give specific width breathing room to larger text inputs */
+  .form-group.autocomplete {
+    flex: 2 1 160px;
+  }
 
 label {
   font-size: 12px;
@@ -75,6 +174,10 @@ input, select {
     border-bottom: 2px solid #0056b3;
   }
 
+  input::placeholder {
+    color: #bbb;
+  }
+
 .disabled-box input {
   background: #f8f9fa;
   color: #999;
@@ -91,6 +194,7 @@ input, select {
   font-weight: 600;
 }
 
+/* Table Styles */
 .styled-table {
   width: 100%;
   border-collapse: collapse;
@@ -121,6 +225,7 @@ input, select {
   cursor: pointer;
 }
 
+/* Autocomplete */
 .autocomplete {
   position: relative;
 }
@@ -150,11 +255,11 @@ input, select {
       background: #f0f0f0;
     }
 
-/* --- Refined Right Panel Summary Styles --- */
+/* Summary Panel Styles */
 .summary-card {
   border: 1px solid #e2e5e8;
   border-radius: 8px;
-  background: #fafbfc;
+  background: white;
   padding: 15px 20px;
 }
 

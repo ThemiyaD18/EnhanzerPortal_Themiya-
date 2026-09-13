@@ -1,4 +1,7 @@
 <Solution>
+  <Folder Name="/Solution Items/">
+    <File Path="Database_Script.sql" />
+  </Folder>
   <Project Path="EnhanzerClient/EnhanzerClient.esproj">
     <Build />
     <Deploy />

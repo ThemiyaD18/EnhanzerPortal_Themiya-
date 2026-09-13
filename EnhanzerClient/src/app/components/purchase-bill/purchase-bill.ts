@@ -13,11 +13,9 @@ export class PurchaseBill implements OnInit {
   itemForm: FormGroup;
   batches: string[] = [];
 
-  // Autocomplete Array
   itemsList: string[] = ["Mango", "Apple", "Banana", "Orange", "Grapes", "Kiwi", "Strawberry"];
   filteredItems: string[] = [];
 
-  // Table Data & Summary
   addedItems: any[] = [];
   totalItems = 0;
   totalQty = 0;
@@ -30,22 +28,22 @@ export class PurchaseBill implements OnInit {
     private http: HttpClient,
     private router: Router
   ) {
+    // Initializing with null fixes the "0" issue on the UI
     this.itemForm = this.fb.group({
       item: ['', Validators.required],
       batch: ['', Validators.required],
-      standardCost: [0, Validators.min(0)],
-      standardPrice: [0, Validators.min(0)],
-      margin: [0],
+      standardCost: [null, Validators.min(0)],
+      standardPrice: [null, Validators.min(0)],
+      margin: [null],
       qty: [1, [Validators.required, Validators.min(1)]],
-      freeQty: [0],
-      discount: [0],
-      totalCost: [{ value: 0, disabled: true }],
-      totalSelling: [{ value: 0, disabled: true }]
+      freeQty: [null],
+      discount: [null],
+      totalCost: [{ value: null, disabled: true }],
+      totalSelling: [{ value: null, disabled: true }]
     });
   }
 
   ngOnInit(): void {
-    // Session check: ensure user is authenticated
     if (localStorage.getItem('isLoggedIn') !== 'true') {
       this.router.navigate(['/']);
       return;
@@ -53,7 +51,6 @@ export class PurchaseBill implements OnInit {
 
     this.fetchBatches();
 
-    // Autocomplete Filter Logic
     this.itemForm.get('item')?.valueChanges.subscribe(val => {
       if (val) {
         this.filteredItems = this.itemsList.filter(i => i.toLowerCase().includes(val.toLowerCase()));
@@ -62,7 +59,7 @@ export class PurchaseBill implements OnInit {
       }
     });
 
-    // Dynamic Calculations
+    // Dynamic Calculations handle nulls gracefully by defaulting to 0
     this.itemForm.valueChanges.subscribe(val => {
       const sc = val.standardCost || 0;
       const sp = val.standardPrice || 0;
@@ -102,7 +99,8 @@ export class PurchaseBill implements OnInit {
     this.addedItems.push(this.itemForm.getRawValue());
     this.calculateSummary();
 
-    this.itemForm.reset({ qty: 1, standardCost: 0, standardPrice: 0, margin: 0, freeQty: 0, discount: 0 });
+    // Reset back to null for the next entry
+    this.itemForm.reset({ qty: 1, standardCost: null, standardPrice: null, margin: null, freeQty: null, discount: null });
   }
 
   removeItem(index: number): void {
@@ -116,7 +114,6 @@ export class PurchaseBill implements OnInit {
     this.grossTotal = this.addedItems.reduce((sum, current) => sum + (current.totalSelling || 0), 0);
   }
 
-  // Session termination
   logout(): void {
     localStorage.removeItem('isLoggedIn');
     this.router.navigate(['/']);
