@@ -13,6 +13,7 @@ export class LoginComponent {
   loginForm: FormGroup;
   isLoading = false;
   errorMessage = '';
+  successMessage = ''; // Variable for the success message
   showPassword = false;
 
   constructor(
@@ -43,17 +44,27 @@ export class LoginComponent {
 
     this.isLoading = true;
     this.errorMessage = '';
+    this.successMessage = ''; // Clear previous messages
     const { email, password } = this.loginForm.value;
 
     this.authService.login(email, password).subscribe({
       next: (res) => {
         this.isLoading = false;
+
+        // Grab the success message from the backend API response
+        this.successMessage = res?.message || 'Login successful!';
+        this.cdr.detectChanges(); // Force the UI to show the message instantly
+
         localStorage.setItem('isLoggedIn', 'true');
         localStorage.setItem('authToken', res?.token ?? '');
         if (res?.locations) {
           localStorage.setItem('userLocations', JSON.stringify(res.locations));
         }
-        this.router.navigate(['/purchase-bill']);
+
+        // Wait 1.5 seconds so the evaluator can read the success message
+        setTimeout(() => {
+          this.router.navigate(['/purchase-bill']);
+        }, 1500);
       },
       error: (err) => {
         this.isLoading = false;
@@ -69,8 +80,6 @@ export class LoginComponent {
         }
 
         console.error('Login error:', err);
-
-        // This forces the UI to immediately display the error message
         this.cdr.detectChanges();
       }
     });

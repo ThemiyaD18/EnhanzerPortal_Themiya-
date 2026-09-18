@@ -2,28 +2,28 @@ import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { provideHttpClient } from '@angular/common/http';
 import { ReactiveFormsModule } from '@angular/forms';
-
-
 import { AppRoutingModule } from './app-routing-module';
 import { App } from './app';
-import { LoginComponent } from './components/login/login'; // 1. Added import here
+import { LoginComponent } from './components/login/login';
 import { PurchaseBill } from './components/purchase-bill/purchase-bill';
-// ... Add it under LoginComponent in the declarations array!
+import { BaseChartDirective, provideCharts, withDefaultRegisterables } from 'ng2-charts';
 
 @NgModule({
   declarations: [
     App,
-    LoginComponent, // 2. Added to declarations here
+    LoginComponent,
     PurchaseBill
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    BaseChartDirective
   ],
   providers: [
-    provideHttpClient()
+    provideHttpClient(),
+    provideCharts(withDefaultRegisterables())
   ],
   bootstrap: [App]
 })
-export class AppModule { }
+export class AppModule { } 

@@ -1,15 +1,31 @@
 <div class="login-wrapper">
   <div class="login-box">
     <h2 class="title">Hi</h2>
+
+    <!-- Red Error Message (Server/Login failures) -->
     <div *ngIf="errorMessage" class="error-alert">{{ errorMessage }}</div>
 
+    <!-- Green Success Message -->
+    <div *ngIf="successMessage" style="color: #28a745; text-align: center; font-weight: 500; margin-bottom: 15px;">
+      {{ successMessage }}
+    </div>
+
     <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
-      <div class="input-line">
+
+      <!-- Email Field -->
+      <div class="input-line" style="margin-bottom: 4px;">
         <span class="icon">✉️</span>
         <input type="email" formControlName="email" placeholder="Email*" />
       </div>
+      <!-- Email Empty/Format Validations -->
+      <div *ngIf="loginForm.get('email')?.invalid && (loginForm.get('email')?.dirty || loginForm.get('email')?.touched)"
+           style="color: #dc3545; font-size: 12px; margin-bottom: 15px; padding-left: 35px; text-align: left;">
+        <span *ngIf="loginForm.get('email')?.hasError('required')">Email is required.</span>
+        <span *ngIf="loginForm.get('email')?.hasError('email')">Please enter a valid email format.</span>
+      </div>
 
-      <div class="input-line">
+      <!-- Password Field -->
+      <div class="input-line" style="margin-bottom: 4px;">
         <span class="icon">🗝️</span>
         <!-- Dynamic type binding for showing/hiding password -->
         <input [type]="showPassword ? 'text' : 'password'" formControlName="password" placeholder="Password*" />
@@ -18,6 +34,11 @@
         <span class="icon toggle-password" (click)="togglePasswordVisibility()">
           {{ showPassword ? '👁️‍🗨️' : '👁️' }}
         </span>
+      </div>
+      <!-- Password Empty Validation -->
+      <div *ngIf="loginForm.get('password')?.invalid && (loginForm.get('password')?.dirty || loginForm.get('password')?.touched)"
+           style="color: #dc3545; font-size: 12px; margin-bottom: 15px; padding-left: 35px; text-align: left;">
+        <span *ngIf="loginForm.get('password')?.hasError('required')">Password is required.</span>
       </div>
 
       <button type="submit" class="btn-gradient" [disabled]="loginForm.invalid || isLoading">

@@ -23,3 +23,14 @@ INSERT INTO Location_Details (Location_Code, Location_Name) VALUES
 ('LOC007', 'Demo location'),
 ('LOC008', 'Main Warehouse');
 GO
+
+-- 4. Create the PurchaseOrders table
+CREATE TABLE PurchaseOrders (
+    OrderNumber VARCHAR(50) PRIMARY KEY,
+    Product VARCHAR(150),
+    DueDate DATETIME,
+    DaysLate INT,
+    NetAmount DECIMAL(18, 2),
+    NumberOfItems INT
+);
+GO
