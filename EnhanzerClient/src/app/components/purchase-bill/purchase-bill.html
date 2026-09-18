@@ -93,14 +93,14 @@
         <div class="summary-section net-total-section">
           <h5 class="section-title">💵 Net Total</h5>
           <h3 class="net-total-text">Rs. {{ grossTotal | number:'1.2-2' }}</h3>
+          <button class="btn-save" (click)="savePurchaseOrder()">Save Order</button>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- Dashboard Widgets (Now clearly separated) -->
+  <!-- Dashboard Widgets -->
   <div class="dashboard-wrapper">
-
     <!-- Widget 01: Table View -->
     <div class="widget-card">
       <div class="widget-header">
@@ -157,6 +157,5 @@
         </div>
       </div>
     </div>
-
   </div>
 </div>

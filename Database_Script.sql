@@ -25,12 +25,12 @@ INSERT INTO Location_Details (Location_Code, Location_Name) VALUES
 GO
 
 -- 4. Create the PurchaseOrders table
-CREATE TABLE PurchaseOrders (
-    OrderNumber VARCHAR(50) PRIMARY KEY,
-    Product VARCHAR(150),
-    DueDate DATETIME,
-    DaysLate INT,
-    NetAmount DECIMAL(18, 2),
-    NumberOfItems INT
+-- 5. Create the PurchaseOrderItems table
+CREATE TABLE PurchaseOrderItems (
+    Id INT IDENTITY(1,1) PRIMARY KEY,
+    OrderNumber VARCHAR(50) NOT NULL,
+    ItemName VARCHAR(150) NOT NULL,
+    Quantity INT NOT NULL,
+    FOREIGN KEY (OrderNumber) REFERENCES PurchaseOrders(OrderNumber) ON DELETE CASCADE
 );
 GO

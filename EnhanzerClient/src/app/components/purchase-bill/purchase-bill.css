@@ -447,3 +447,22 @@ input, select {
   width: 100%;
   max-width: 220px;
 }
+
+/* Save Button */
+.btn-save {
+  width: 100%;
+  margin-top: 20px;
+  background-color: #0056b3;
+  color: white;
+  border: none;
+  padding: 12px;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+  .btn-save:hover {
+    background-color: #004494;
+  }

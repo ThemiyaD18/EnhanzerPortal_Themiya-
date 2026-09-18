@@ -17,8 +17,28 @@
   },
   {
     "ContainingType": "EnhanzerSellsWebBackend.Controllers.LocationsController",
-    "Method": "GetLocations",
-    "RelativePath": "api/Locations",
+    "Method": "GetItemQuantityDistribution",
+    "RelativePath": "api/Location/GetItemQuantityDistribution",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "EnhanzerSellsWebBackend.Controllers.LocationsController",
+    "Method": "GetLatestPurchaseOrders",
+    "RelativePath": "api/Location/GetLatestPurchaseOrders",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "EnhanzerSellsWebBackend.Controllers.LocationsController",
+    "Method": "GetOldestPurchaseOrderItems",
+    "RelativePath": "api/Location/GetOldestPurchaseOrderItems",
     "HttpMethod": "GET",
     "IsController": true,
     "Order": 0,

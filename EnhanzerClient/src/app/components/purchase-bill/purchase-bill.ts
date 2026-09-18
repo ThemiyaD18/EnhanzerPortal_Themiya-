@@ -8,6 +8,7 @@ export interface PurchaseOrder {
   purchaseOrderId?: number;
   netAmount: number;
   numberOfItems: number;
+  items?: BillItem[]; // Added to send the list of items to the backend
 }
 
 export interface PurchaseOrderItem {
@@ -21,7 +22,6 @@ export interface ChartItemData {
   totalQuantity: number;
 }
 
-// Added to satisfy strict type checking for your form and table
 export interface BillItem {
   item: string;
   batch: string;
@@ -121,13 +121,37 @@ export class PurchaseBill implements OnInit {
   }
 
   savePurchaseOrder(): void {
+    // 1. Prevent saving if the table is empty
+    if (this.addedItems.length === 0) {
+      alert('Please add at least one item to the table before saving.');
+      return;
+    }
+
+    // 2. Map the current UI totals and the item array to the payload
+    this.newPurchaseOrder = {
+      netAmount: this.grossTotal,
+      numberOfItems: this.totalItems,
+      items: this.addedItems // Attaches the actual items so the backend can save them
+    };
+
+    // 3. Send the HTTP Post Request
     this.http.post<PurchaseOrder>(`${this.widgetApiUrl}/SavePurchaseOrder`, this.newPurchaseOrder)
       .subscribe({
         next: (response: PurchaseOrder) => {
           console.log('Purchase order saved successfully', response);
+          alert('Purchase Order Saved Successfully!');
+          
+          // 4. Clear the UI table & reset totals after successful save
+          this.addedItems = [];
+          this.calculateSummary();
+          
+          // 5. Reload the widgets to show the new data immediately
           this.loadDashboardWidgets();
         },
-        error: (error: HttpErrorResponse) => console.error('Error saving purchase order', error)
+        error: (error: HttpErrorResponse) => {
+          console.error('Error saving purchase order', error);
+          alert('Failed to save purchase order. Please check the console for details.');
+        }
       });
   }
 
@@ -186,6 +210,5 @@ export class PurchaseBill implements OnInit {
   logout(): void {
     localStorage.removeItem('isLoggedIn');
     this.router.navigate(['/']);
-  }}
-
-  
+  }
+}
