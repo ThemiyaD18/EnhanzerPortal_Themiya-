@@ -1,0 +1,10 @@
+﻿################################################################################
+# This .gitignore file was automatically created by Microsoft(R) Visual Studio.
+################################################################################
+
+/.vs
+/EnhanzerClient/obj/Debug/package.g.props
+/EnhanzerSellsWeb/bin/Debug/net8.0/EnhanzerSellsWebBackend.dll
+/EnhanzerSellsWeb/bin/Debug/net8.0/EnhanzerSellsWebBackend.exe
+/EnhanzerSellsWeb/bin/Debug/net8.0/EnhanzerSellsWebBackend.pdb
+/EnhanzerSellsWeb/obj/Debug/net8.0/ref/EnhanzerSellsWebBackend.dll
